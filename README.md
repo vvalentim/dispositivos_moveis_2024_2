@@ -1,6 +1,6 @@
-# dispositivos_moveis_2024_2
+# primeira_entrega
 
-A new Flutter project.
+Primeira entrega de programação de dispositivos
 
 ## Getting Started
 
