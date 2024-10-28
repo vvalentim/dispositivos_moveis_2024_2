@@ -1,31 +1,26 @@
+import 'package:dispositivos_moveis_2024_2/models/project.dart';
 import 'package:flutter/material.dart';
 
-class TestEntriesPage extends StatefulWidget {
-  const TestEntriesPage({super.key});
+class ActiveProjectPage extends StatefulWidget {
+  final Project project;
+
+  const ActiveProjectPage({
+    super.key,
+    required this.project,
+  });
 
   @override
-  State<TestEntriesPage> createState() => _TestEntriesPageState();
+  State<ActiveProjectPage> createState() => _ActiveProjectPageState();
 }
 
-class _TestEntriesPageState extends State<TestEntriesPage> {
+class _ActiveProjectPageState extends State<ActiveProjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Project Name',
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
+        title: Text(widget.project.name),
       ),
-
-      body: Container(),
-
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.meeting_room),
@@ -41,8 +36,6 @@ class _TestEntriesPageState extends State<TestEntriesPage> {
           )
         ],
       ),
-
-      //
     );
   }
 }

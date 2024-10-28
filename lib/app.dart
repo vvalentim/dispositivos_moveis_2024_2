@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dispositivos_moveis_2024_2/theme/theme.dart';
 import 'package:dispositivos_moveis_2024_2/pages/projects_page.dart';
 
 class App extends StatelessWidget {
@@ -8,10 +9,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.defaultTheme,
+      themeMode: ThemeMode.dark,
       home: const ProjectsPage(),
       debugShowCheckedModeBanner: false,
     );
