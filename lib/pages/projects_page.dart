@@ -160,13 +160,14 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 _createProject();
               }
 
-              projectNameController.clear();
               Navigator.of(context).pop();
             }
           },
         );
       },
-    );
+    ).whenComplete(() {
+      projectNameController.clear();
+    });
   }
 
   Future<void> _showDeleteProject(
