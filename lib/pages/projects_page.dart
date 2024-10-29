@@ -14,35 +14,35 @@ class ProjectsPage extends StatefulWidget {
 }
 
 class _ProjectsPageState extends State<ProjectsPage> {
-  late ProjectsProvider _projectsProvider;
+  late ProjectsProvider projectsProvider;
 
-  late List<Project> _filteredProjects;
+  late List<Project> filteredProjects;
 
-  final _form = GlobalKey<FormState>();
+  final form = GlobalKey<FormState>();
 
-  final _projectNameController = TextEditingController();
+  final projectNameController = TextEditingController();
 
   String _searchQuery = '';
 
   void _createProject() {
-    _projectsProvider.add(Project(_projectNameController.text));
+    projectsProvider.add(Project(projectNameController.text));
   }
 
   void _renameProject(Project project) {
-    _projectsProvider.rename(project, _projectNameController.text);
+    projectsProvider.rename(project, projectNameController.text);
   }
 
   @override
   void dispose() {
     super.dispose();
-    _projectNameController.dispose();
+    projectNameController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    _projectsProvider = context.watch<ProjectsProvider>();
-    _filteredProjects = _projectsProvider.getFilteredList(_searchQuery);
+    projectsProvider = context.watch<ProjectsProvider>();
+    filteredProjects = projectsProvider.getFilteredList(_searchQuery);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -57,7 +57,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
         ),
       ),
       body: ListView.builder(
-        itemCount: _filteredProjects.length,
+        itemCount: filteredProjects.length,
         itemBuilder: (
           BuildContext context,
           int projectIndex,
@@ -67,7 +67,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
               context,
               MaterialPageRoute(
                 builder: (_) =>
-                    ActiveProjectPage(project: _filteredProjects[projectIndex]),
+                    ActiveProjectPage(project: filteredProjects[projectIndex]),
               ),
             ),
             child: Ink(
@@ -75,7 +75,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   ? primaryColor.withOpacity(0.2)
                   : primaryColor.withOpacity(0.1),
               child: _getProjectListTile(
-                _filteredProjects[projectIndex],
+                filteredProjects[projectIndex],
               ),
             ),
           );
@@ -116,9 +116,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
 
   Form _buildFormName() {
     return Form(
-      key: _form,
+      key: form,
       child: TextFormField(
-        controller: _projectNameController,
+        controller: projectNameController,
         decoration: const InputDecoration(
           labelText: 'Project name',
           border: OutlineInputBorder(),
@@ -141,7 +141,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     final title = project != null ? 'Rename Project' : 'Create Project';
 
     if (project != null) {
-      _projectNameController.text = project.name;
+      projectNameController.text = project.name;
     }
 
     return showModalBottomSheet(
@@ -153,14 +153,14 @@ class _ProjectsPageState extends State<ProjectsPage> {
           title: title,
           content: _buildFormName(),
           submitCallback: () {
-            if (_form.currentState!.validate()) {
+            if (form.currentState!.validate()) {
               if (project != null) {
                 _renameProject(project);
               } else {
                 _createProject();
               }
 
-              _projectNameController.clear();
+              projectNameController.clear();
               Navigator.of(context).pop();
             }
           },

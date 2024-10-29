@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  static final colorScheme = ColorScheme.fromSeed(seedColor: Colors.blueAccent);
+  static final colorScheme = ColorScheme.fromSeed(seedColor: Colors.blue);
 
   static ThemeData defaultTheme = ThemeData(
     colorScheme: colorScheme,
