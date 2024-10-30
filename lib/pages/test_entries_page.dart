@@ -10,8 +10,10 @@ class TestEntriesPage extends StatefulWidget {
 class _TestEntriesPageState extends State<TestEntriesPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('test entries'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Test Entries'),
+      ),
     );
   }
 }

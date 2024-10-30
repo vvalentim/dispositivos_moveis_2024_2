@@ -10,8 +10,10 @@ class ReportsPage extends StatefulWidget {
 class _ReportsPageState extends State<ReportsPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('reports'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Reports'),
+      ),
     );
   }
 }

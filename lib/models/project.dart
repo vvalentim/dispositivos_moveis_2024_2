@@ -2,13 +2,16 @@ import 'package:dispositivos_moveis_2024_2/models/room.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class Project {
+  final int _id;
   final DateTime _createdAt = DateTime.now();
   DateTime _updatedAt = DateTime.now();
   String _name;
   bool pinned = false;
   final List<Room> _rooms = [];
 
-  Project(this._name);
+  Project(this._id, this._name);
+
+  int get id => _id;
 
   DateTime get createdAt => _createdAt;
 
