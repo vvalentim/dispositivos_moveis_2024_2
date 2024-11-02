@@ -2,6 +2,7 @@ import 'package:dispositivos_moveis_2024_2/models/project.dart';
 import 'package:dispositivos_moveis_2024_2/pages/active_project_page.dart';
 import 'package:dispositivos_moveis_2024_2/providers/projects_provider.dart';
 import 'package:dispositivos_moveis_2024_2/widgets/bottom_sheet_widget.dart';
+import 'package:dispositivos_moveis_2024_2/widgets/confirm_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -257,52 +258,32 @@ class _ProjectsPageState extends State<ProjectsPage> {
     return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            'Delete Projects',
-            textAlign: TextAlign.center,
-          ),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.warning_rounded,
-                size: 48,
-              ),
-              Text(
-                "Are you sure you want to delete all projects?",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-                overflow: TextOverflow.fade,
-              ),
-              SizedBox(height: 15),
-              Text(
-                "All data associated with it will also be deleted.",
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
-          ),
-          actionsAlignment: MainAxisAlignment.spaceBetween,
-          actions: [
-            OutlinedButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.of(context).pop(),
+        return ConfirmDialogWidget(
+          title: 'Delete Projects',
+          contents: const [
+            Icon(
+              Icons.warning_rounded,
+              size: 48,
             ),
-            FilledButton(
-              style: const ButtonStyle(),
-              onPressed: () {
-                _removeAllSelected();
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
+            Text(
+              "Are you sure you want to delete all projects?",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.fade,
+            ),
+            SizedBox(height: 15),
+            Text(
+              "All data associated with it will also be deleted.",
+              textAlign: TextAlign.center,
             ),
           ],
+          submitCallback: () {
+            _removeAllSelected();
+            Navigator.of(context).pop();
+          },
         );
       },
     );
