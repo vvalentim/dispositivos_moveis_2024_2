@@ -34,7 +34,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
       _selected.clear();
     });
   }
-
+//parei aqui
   void _createProject() {
     context.read<ProjectsProvider>().add(_name.text);
   }

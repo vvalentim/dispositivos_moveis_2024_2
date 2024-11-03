@@ -1,22 +1,22 @@
-import 'package:dispositivos_moveis_2024_2/models/project.dart';
-import 'package:dispositivos_moveis_2024_2/pages/reports_page.dart';
-import 'package:dispositivos_moveis_2024_2/pages/rooms_page.dart';
 import 'package:dispositivos_moveis_2024_2/pages/test_entries_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ActiveProjectPage extends StatefulWidget {
-  final Project project;
+import '../models/room.dart';
 
-  const ActiveProjectPage({
+class ActiveRoomPage extends StatefulWidget{
+  final Room room;
+
+  const ActiveRoomPage({
     super.key,
-    required this.project,
+    required this.room,
   });
 
   @override
-  State<ActiveProjectPage> createState() => _ActiveProjectPageState();
+  State<ActiveRoomPage> createState() => _ActiveRoomPageState();
 }
 
-class _ActiveProjectPageState extends State<ActiveProjectPage> {
+class _ActiveRoomPageState extends State<ActiveRoomPage> {
   int _currentPage = 0;
 
   late PageController _pageController;
@@ -42,11 +42,7 @@ class _ActiveProjectPageState extends State<ActiveProjectPage> {
         onPageChanged: (page) {
           setCurrentPage(page);
         },
-        children: [
-          RoomsPage(project: widget.project),
-          const TestEntriesPage(),
-          const ReportsPage(),
-        ],
+
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentPage,

@@ -1,12 +1,17 @@
 import 'package:dispositivos_moveis_2024_2/models/test_entry.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Room {
   final DateTime _createdAt = DateTime.now();
   DateTime _updatedAt = DateTime.now();
   String _name;
+  final int _id;
   final List<TestEntry> _tests = [];
+  int get id => _id;
+  String get updatedAtTimeAgo => timeago.format(_updatedAt);
 
-  Room(this._name);
+
+  Room(this._id,this._name);
 
   DateTime get createdAt => _createdAt;
 
