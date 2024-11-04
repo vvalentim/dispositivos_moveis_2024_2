@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:dispositivos_moveis_2024_2/theme/theme.dart';
-import 'package:dispositivos_moveis_2024_2/pages/projects_page.dart';
+import 'package:provider/provider.dart';
+import 'package:dispositivos_moveis_2024_2/ui/theme/theme.dart';
+import 'package:dispositivos_moveis_2024_2/ui/pages/projects_page.dart';
+import 'package:dispositivos_moveis_2024_2/controllers/projects_list_controller.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -11,7 +13,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       theme: AppTheme.defaultTheme,
       themeMode: ThemeMode.dark,
-      home: const ProjectsPage(),
+      home: ChangeNotifierProvider(
+        create: (context) => ProjectsListController(),
+        child: const ProjectsPage(),
+      ),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -1,36 +1,35 @@
-import 'package:dispositivos_moveis_2024_2/models/test_entry.dart';
-
 class Room {
-  final DateTime _createdAt = DateTime.now();
-  DateTime _updatedAt = DateTime.now();
-  String _name;
-  final List<TestEntry> _tests = [];
+  final int id;
 
-  Room(this._name);
+  final int projectId;
 
-  DateTime get createdAt => _createdAt;
+  final DateTime createdAt;
 
-  DateTime get updatedAt => _updatedAt;
+  final DateTime updatedAt;
 
-  String get name => _name;
+  final String name;
 
-  List<TestEntry> get entries => List.unmodifiable(_tests);
+  Room({
+    required this.id,
+    required this.projectId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.name,
+  });
 
-  void rename(String newName) {
-    _name = newName;
-    _updatedAt = DateTime.now();
-  }
-
-  void addTestEntry(TestEntry test) {
-    if (!_tests.contains(test)) {
-      _tests.add(test);
-      _updatedAt = DateTime.now();
-    }
-  }
-
-  void removeTestEntry(TestEntry test) {
-    if (_tests.remove(test)) {
-      _updatedAt = DateTime.now();
-    }
+  Room copyWith({
+    int? id,
+    int? projectId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? name,
+  }) {
+    return Room(
+      id: id ?? this.id,
+      projectId: projectId ?? this.projectId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      name: name ?? this.name,
+    );
   }
 }

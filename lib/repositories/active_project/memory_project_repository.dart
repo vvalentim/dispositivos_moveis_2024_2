@@ -1,0 +1,3 @@
+import 'package:dispositivos_moveis_2024_2/repositories/active_project/active_project_repository.dart';
+
+class MemoryActiveProjectRepository implements ActiveProjectRepository {}

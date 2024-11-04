@@ -6,20 +6,42 @@ typedef TestEntryData = ({
 });
 
 class TestEntry {
-  final DateTime _createdAt = DateTime.now();
-  DateTime _updatedAt = DateTime.now();
-  TestEntryData _data;
+  final int id;
 
-  TestEntry(this._data);
+  final int projectId;
 
-  DateTime get createdAt => _createdAt;
+  final int roomId;
 
-  DateTime get updatedAt => _updatedAt;
+  final DateTime createdAt;
 
-  TestEntryData get data => _data;
+  final DateTime updatedAt;
 
-  void update(TestEntryData data) {
-    _data = data;
-    _updatedAt = DateTime.now();
+  final TestEntryData data;
+
+  TestEntry({
+    required this.id,
+    required this.projectId,
+    required this.roomId,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.data,
+  });
+
+  TestEntry copyWith({
+    int? id,
+    int? roomId,
+    int? projectId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    TestEntryData? data,
+  }) {
+    return TestEntry(
+      id: id ?? this.id,
+      roomId: roomId ?? this.roomId,
+      projectId: projectId ?? this.projectId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      data: data ?? this.data,
+    );
   }
 }

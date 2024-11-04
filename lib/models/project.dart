@@ -1,43 +1,32 @@
-import 'package:dispositivos_moveis_2024_2/models/room.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class Project {
-  final int _id;
-  final DateTime _createdAt = DateTime.now();
-  DateTime _updatedAt = DateTime.now();
-  String _name;
-  bool pinned = false;
-  final List<Room> _rooms = [];
+  final int id;
 
-  Project(this._id, this._name);
+  final DateTime createdAt;
 
-  int get id => _id;
+  final DateTime updatedAt;
 
-  DateTime get createdAt => _createdAt;
+  final String name;
 
-  DateTime get updatedAt => _updatedAt;
+  String get updatedAtTimeAgo => timeago.format(updatedAt);
 
-  String get name => _name;
+  Project({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.name,
+  });
 
-  List<Room> get rooms => List.unmodifiable(_rooms);
-
-  String get updatedAtTimeAgo => timeago.format(_updatedAt);
-
-  void rename(String newName) {
-    _name = newName;
-    _updatedAt = DateTime.now();
-  }
-
-  void addRoom(Room room) {
-    if (!_rooms.contains(room)) {
-      _rooms.add(room);
-      _updatedAt = DateTime.now();
-    }
-  }
-
-  void removeRoom(Room room) {
-    if (_rooms.remove(room)) {
-      _updatedAt = DateTime.now();
-    }
+  Project copyWith({
+    DateTime? updatedAt,
+    String? name,
+  }) {
+    return Project(
+      id: id,
+      createdAt: createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      name: name ?? this.name,
+    );
   }
 }

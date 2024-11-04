@@ -1,11 +1,11 @@
-import 'package:dispositivos_moveis_2024_2/models/project.dart';
-import 'package:dispositivos_moveis_2024_2/pages/active_project_page.dart';
-import 'package:dispositivos_moveis_2024_2/providers/projects_provider.dart';
-import 'package:dispositivos_moveis_2024_2/widgets/bottom_sheet_widget.dart';
-import 'package:dispositivos_moveis_2024_2/widgets/confirm_dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:dispositivos_moveis_2024_2/models/project.dart';
+import 'package:dispositivos_moveis_2024_2/ui/pages/active_project_page.dart';
+import 'package:dispositivos_moveis_2024_2/controllers/projects_list_controller.dart';
+import 'package:dispositivos_moveis_2024_2/ui/widgets/bottom_sheet_widget.dart';
+import 'package:dispositivos_moveis_2024_2/ui/widgets/confirm_dialog_widget.dart';
 
 class ProjectsPage extends StatefulWidget {
   const ProjectsPage({super.key});
@@ -15,52 +15,47 @@ class ProjectsPage extends StatefulWidget {
 }
 
 class _ProjectsPageState extends State<ProjectsPage> {
-  bool _onSelectionMode = false;
-
-  late ProjectsProvider _provider;
-
-  late List<Project> _projects;
-
-  final List<Project> _selected = [];
+  late ProjectsListController _controller;
 
   final _form = GlobalKey<FormState>();
 
-  final _name = TextEditingController();
+  final _nameInputController = TextEditingController();
 
-  // String _searchQuery = '';
-
-  void _clearSelectionMode() {
-    setState(() {
-      _onSelectionMode = false;
-      _selected.clear();
-    });
-  }
-
-  void _createProject() {
-    context.read<ProjectsProvider>().add(_name.text);
-  }
-
-  void _renameProject(int projectId) {
-    context.read<ProjectsProvider>().rename(projectId, _name.text);
-  }
-
-  void _removeAllSelected() {
-    context.read<ProjectsProvider>().removeAll(_selected);
-
-    _clearSelectionMode();
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   void dispose() {
+    _nameInputController.dispose();
     super.dispose();
-    _name.dispose();
+  }
+
+  void _onTileTap(Project project) {
+    if (_controller.selectionMode) {
+      return _controller.toggleItemSelection(project);
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ActiveProjectPage(projectId: project.id),
+      ),
+    );
+  }
+
+  void _onTileLongPress(Project project) {
+    if (_controller.selectionMode) {
+      return _controller.clearSelection();
+    }
+
+    _controller.toggleItemSelection(project);
   }
 
   @override
   Widget build(BuildContext context) {
-    _provider = context.watch<ProjectsProvider>();
-    // _projects = _provider.getFilteredList(_searchQuery);
-    _projects = _provider.projects;
+    _controller = Provider.of<ProjectsListController>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -69,26 +64,23 @@ class _ProjectsPageState extends State<ProjectsPage> {
         actions: _buildAppBarActions(),
         title: const Text('Projects'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showCreateOrRenameProject(),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
-      body: ListView.builder(
-        itemCount: _projects.length,
-        itemBuilder: (BuildContext context, int index) {
-          return _buildProjectListTile(_projects[index], index);
-        },
-      ),
+      floatingActionButton: !_controller.loading
+          ? FloatingActionButton(
+              onPressed: () => _showCreateOrRenameProject(),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+            )
+          : null,
+      body: _buildProjectsList(),
     );
   }
 
   Widget? _buildAppBarLeading() {
-    return _onSelectionMode
+    return _controller.selectionMode
         ? IconButton(
-            onPressed: () => _clearSelectionMode(),
+            onPressed: () => _controller.clearSelection(),
             icon: const Icon(Icons.undo),
           )
         : null;
@@ -97,7 +89,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
   List<Widget> _buildAppBarActions() {
     final List<Widget> actions = [];
 
-    if (_onSelectionMode) {
+    if (_controller.selectionMode) {
       actions.add(
         IconButton(
           onPressed: () => _showDeleteSelectedProjects(),
@@ -109,47 +101,27 @@ class _ProjectsPageState extends State<ProjectsPage> {
     return actions;
   }
 
-  Widget _buildProjectListTile(Project project, int index) {
+  Widget _buildProjectsList() {
+    if (_controller.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return ListView.builder(
+      itemCount: _controller.projects.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildProjectsListTile(_controller.projects[index], index);
+      },
+    );
+  }
+
+  Widget _buildProjectsListTile(Project project, int index) {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return InkWell(
-      onLongPress: () {
-        setState(() {
-          if (!_onSelectionMode) {
-            _onSelectionMode = true;
-
-            if (_selected.contains(project)) {
-              _selected.remove(project);
-            } else {
-              _selected.add(project);
-            }
-          } else {
-            _clearSelectionMode();
-          }
-        });
-      },
-      onTap: () {
-        if (!_onSelectionMode) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ActiveProjectPage(project: project),
-            ),
-          );
-        } else {
-          setState(() {
-            if (_selected.contains(project)) {
-              _selected.remove(project);
-            } else {
-              _selected.add(project);
-            }
-          });
-        }
-      },
+      onLongPress: () => _onTileLongPress(project),
+      onTap: () => _onTileTap(project),
       child: Ink(
-        color: index % 2 != 0
-            ? primaryColor.withOpacity(0.2)
-            : primaryColor.withOpacity(0.1),
+        color: index % 2 != 0 ? primaryColor.withOpacity(0.2) : primaryColor.withOpacity(0.1),
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
             vertical: 8,
@@ -170,11 +142,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
                     padding: const EdgeInsets.all(16),
                     icon: const Icon(Icons.mode_edit),
                   ),
-                  // IconButton(
-                  //   onPressed: () => _showDeleteProject(project),
-                  //   padding: const EdgeInsets.all(16),
-                  //   icon: const Icon(Icons.delete),
-                  // ),
                 ],
               ),
             ],
@@ -184,14 +151,15 @@ class _ProjectsPageState extends State<ProjectsPage> {
     );
   }
 
+  // Show or hide checkbox depending on "selectionMode"
   AnimatedContainer _buildListTileLeadingSelection(Project project) {
     return AnimatedContainer(
       margin: const EdgeInsets.all(0),
       height: double.infinity,
-      width: _onSelectionMode ? 30 : 0,
+      width: _controller.selectionMode ? 30 : 0,
       duration: Durations.short4,
-      child: _onSelectionMode
-          ? _selected.contains(project)
+      child: _controller.selectionMode
+          ? _controller.selected.contains(project)
               ? const Icon(Icons.check_box)
               : const Icon(Icons.check_box_outline_blank)
           : null,
@@ -202,7 +170,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     return Form(
       key: _form,
       child: TextFormField(
-        controller: _name,
+        controller: _nameInputController,
         decoration: const InputDecoration(
           labelText: 'Project name',
           border: OutlineInputBorder(),
@@ -225,7 +193,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     final title = project != null ? 'Rename Project' : 'Create Project';
 
     if (project != null) {
-      _name.text = project.name;
+      _nameInputController.text = project.name;
     }
 
     return showModalBottomSheet(
@@ -239,9 +207,9 @@ class _ProjectsPageState extends State<ProjectsPage> {
           submitCallback: () {
             if (_form.currentState!.validate()) {
               if (project != null) {
-                _renameProject(project.id);
+                _controller.renameProject(project.id, _nameInputController.text);
               } else {
-                _createProject();
+                _controller.createProject(_nameInputController.text);
               }
 
               Navigator.of(context).pop();
@@ -250,7 +218,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
         );
       },
     ).whenComplete(() {
-      _name.clear();
+      _nameInputController.clear();
     });
   }
 
@@ -281,7 +249,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
             ),
           ],
           submitCallback: () {
-            _removeAllSelected();
+            _controller.removeAllSelectedProjects();
             Navigator.of(context).pop();
           },
         );

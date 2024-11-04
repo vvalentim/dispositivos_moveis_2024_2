@@ -1,16 +1,14 @@
-import 'package:dispositivos_moveis_2024_2/models/project.dart';
-import 'package:dispositivos_moveis_2024_2/pages/reports_page.dart';
-import 'package:dispositivos_moveis_2024_2/pages/rooms_page.dart';
-import 'package:dispositivos_moveis_2024_2/pages/test_entries_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
+import 'package:dispositivos_moveis_2024_2/ui/pages/reports_page.dart';
+import 'package:dispositivos_moveis_2024_2/ui/pages/rooms_page.dart';
+import 'package:dispositivos_moveis_2024_2/ui/pages/test_entries_page.dart';
 
 class ActiveProjectPage extends StatefulWidget {
-  final Project project;
+  final int projectId;
 
-  const ActiveProjectPage({
-    super.key,
-    required this.project,
-  });
+  const ActiveProjectPage({super.key, required this.projectId});
 
   @override
   State<ActiveProjectPage> createState() => _ActiveProjectPageState();
@@ -37,16 +35,19 @@ class _ActiveProjectPageState extends State<ActiveProjectPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (page) {
-          setCurrentPage(page);
-        },
-        children: [
-          RoomsPage(project: widget.project),
-          const TestEntriesPage(),
-          const ReportsPage(),
-        ],
+      body: ChangeNotifierProvider(
+        create: (context) => ActiveProjectController(),
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (page) {
+            setCurrentPage(page);
+          },
+          children: const [
+            RoomsPage(),
+            TestEntriesPage(),
+            ReportsPage(),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentPage,
