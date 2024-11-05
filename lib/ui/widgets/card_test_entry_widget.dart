@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
 import 'package:dispositivos_moveis_2024_2/models/test_entry.dart';
+import 'package:intl/intl.dart';
 
 class CardTestEntryWidget extends StatelessWidget {
   final TestEntry entry;
@@ -39,7 +40,7 @@ class CardTestEntryWidget extends StatelessWidget {
 
   Widget _buildHeader() {
     final roomName = controller.getRoomName(entry.roomId) ?? 'Room name';
-    final isoEntryDate = 'Entry date';
+    final entryDate = DateFormat('dd/MM/yyyy HH:mm').format(entry.createdAt);
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10.0),
@@ -65,7 +66,7 @@ class CardTestEntryWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  isoEntryDate,
+                  entryDate,
                   style: const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 14,

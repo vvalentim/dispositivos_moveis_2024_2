@@ -82,6 +82,7 @@ class ActiveProjectController extends ChangeNotifier {
 
   void removeRoom(Room room) async {
     await _repository.deleteRoom(room);
+    _projectTestEntries.removeWhere((entry) => entry.roomId == room.id);
     _projectRooms.remove(room);
     notifyListeners();
   }
@@ -134,8 +135,7 @@ class ActiveProjectController extends ChangeNotifier {
 
     // TODO: "proper" batch delete
     for (final room in _selectedRooms) {
-      await _repository.deleteRoom(room);
-      _projectRooms.remove(room);
+      removeRoom(room);
     }
 
     _loading = false;
