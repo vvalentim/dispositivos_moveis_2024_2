@@ -1,5 +1,8 @@
-import 'package:dispositivos_moveis_2024_2/models/room.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:dispositivos_moveis_2024_2/models/room.dart';
+import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
+import 'package:dispositivos_moveis_2024_2/models/test_entry.dart';
 
 class TestEntryFormPage extends StatefulWidget {
   final List<Room> rooms;
@@ -18,6 +21,37 @@ class _TestEntryFormPageState extends State<TestEntryFormPage> {
   final _speed2g = TextEditingController();
   final _speed5g = TextEditingController();
 
+  bool loading = false;
+
+  late Room? selectedRoom;
+
+  @override
+  void initState() {
+    selectedRoom = widget.rooms.first;
+    super.initState();
+  }
+
+  void _submitForm() {
+    // TODO: validate fields
+    final controller = context.read<ActiveProjectController>();
+
+    if (selectedRoom != null) {
+      // TODO: refactor to be able to handle async submit
+
+      controller.createTestEntry(
+        selectedRoom!.id,
+        (
+          signalStrength_2g: double.parse(_signalStrength2g.text),
+          signalStrength_5g: double.parse(_signalStrength5g.text),
+          speed_2g: double.parse(_speed2g.text),
+          speed_5g: double.parse(_speed5g.text),
+        ),
+      );
+
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,67 +60,71 @@ class _TestEntryFormPageState extends State<TestEntryFormPage> {
       ),
       body: SingleChildScrollView(
         reverse: true,
-        child: Form(
-          key: _form,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 12.0),
-                  child: Text(
-                    'Room',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-                _buildDropdownRooms(),
-                const Padding(
-                  padding: EdgeInsets.only(top: 24.0, bottom: 12.0),
-                  child: Text(
-                    '2,4 GHz Channel',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-                _buildFormInput(
-                  label: 'Signal strength (dBm)',
-                  controller: _signalStrength2g,
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-                _buildFormInput(
-                  label: 'Speed (Mbps)',
-                  controller: _speed2g,
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 24.0, bottom: 12.0),
-                  child: Text(
-                    '5 GHz Channel',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-                _buildFormInput(
-                  label: 'Signal strength (dBm)',
-                  controller: _signalStrength5g,
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-                _buildFormInput(
-                  label: 'Speed (Mbps)',
-                  controller: _speed5g,
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-                _buildFormButtons(),
-              ],
+        child: _buildForm(),
+      ),
+    );
+  }
+
+  Form _buildForm() {
+    return Form(
+      key: _form,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(bottom: 12.0),
+              child: Text(
+                'Room',
+                style: TextStyle(fontSize: 24),
+              ),
             ),
-          ),
+            _buildDropdownRooms(),
+            const Padding(
+              padding: EdgeInsets.only(top: 24.0, bottom: 12.0),
+              child: Text(
+                '2,4 GHz Channel',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            _buildFormInput(
+              label: 'Signal strength (dBm)',
+              controller: _signalStrength2g,
+              validator: (value) {
+                return null;
+              },
+            ),
+            _buildFormInput(
+              label: 'Speed (Mbps)',
+              controller: _speed2g,
+              validator: (value) {
+                return null;
+              },
+            ),
+            const Padding(
+              padding: EdgeInsets.only(top: 24.0, bottom: 12.0),
+              child: Text(
+                '5 GHz Channel',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            _buildFormInput(
+              label: 'Signal strength (dBm)',
+              controller: _signalStrength5g,
+              validator: (value) {
+                return null;
+              },
+            ),
+            _buildFormInput(
+              label: 'Speed (Mbps)',
+              controller: _speed5g,
+              validator: (value) {
+                return null;
+              },
+            ),
+            _buildFormButtons(),
+          ],
         ),
       ),
     );
@@ -98,6 +136,11 @@ class _TestEntryFormPageState extends State<TestEntryFormPage> {
       expandedInsets: const EdgeInsets.only(left: 0, right: 0),
       controller: _room,
       hintText: 'Select the room for this entry',
+      onSelected: (Room? room) {
+        setState(() {
+          selectedRoom = room;
+        });
+      },
       dropdownMenuEntries: widget.rooms.map<DropdownMenuEntry<Room>>((Room room) {
         return DropdownMenuEntry<Room>(
           value: room,
@@ -141,7 +184,7 @@ class _TestEntryFormPageState extends State<TestEntryFormPage> {
             ),
           ),
           FilledButton(
-            onPressed: () {},
+            onPressed: () => _submitForm(),
             style: const ButtonStyle(),
             child: const Text(
               'Save',
