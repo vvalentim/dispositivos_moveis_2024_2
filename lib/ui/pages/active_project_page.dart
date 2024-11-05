@@ -26,12 +26,6 @@ class _ActiveProjectPageState extends State<ActiveProjectPage> {
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     _controller = Provider.of<ActiveProjectController>(context);
 

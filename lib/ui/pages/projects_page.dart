@@ -44,8 +44,8 @@ class _ProjectsPageState extends State<ProjectsPage> {
       context,
       MaterialPageRoute(
         builder: (_) {
-          return ChangeNotifierProvider<ActiveProjectController>.value(
-            value: ActiveProjectController(project),
+          return ChangeNotifierProvider<ActiveProjectController>(
+            create: (_) => ActiveProjectController(project),
             child: const ActiveProjectPage(),
           );
         },

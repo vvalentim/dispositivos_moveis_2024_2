@@ -41,7 +41,7 @@ class ProjectsListController extends ChangeNotifier {
     notifyListeners();
 
     // Fake delay
-    await Future.delayed(const Duration(seconds: 1));
+    // await Future.delayed(const Duration(seconds: 1));
 
     _projects = await _repository.fetchAll();
     _sortProjectsByTimestamp();

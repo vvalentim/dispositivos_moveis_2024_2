@@ -1,5 +1,5 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:dispositivos_moveis_2024_2/locator.dart';
 import 'package:dispositivos_moveis_2024_2/models/project.dart';
 import 'package:dispositivos_moveis_2024_2/models/room.dart';
@@ -29,7 +29,7 @@ class ActiveProjectController extends ChangeNotifier {
   }
 
   void _load() async {
-    debugPrint('Loading ActiveProjectController');
+    debugPrint('Loading ActiveProjectController(${project.name})');
 
     _loading = true;
     notifyListeners();
@@ -46,8 +46,6 @@ class ActiveProjectController extends ChangeNotifier {
 
   @override
   void dispose() {
-    _projectRooms.clear();
-    _projectTestEntries.clear();
     debugPrint('Disposing of ActiveProjectController(${project.name})');
     super.dispose();
   }
@@ -74,5 +72,35 @@ class ActiveProjectController extends ChangeNotifier {
     await _repository.deleteTestEntry(entry);
     _projectTestEntries.remove(entry);
     notifyListeners();
+  }
+
+  void renameRoom(int id, String name) async {
+    Room? previousReference = _projectRooms.firstWhereOrNull((room) => room.id == id);
+
+    if (previousReference != null) {
+      Room newReference = previousReference.copyWith(name: name, updatedAt: DateTime.now());
+
+      await _repository.updateRoom(newReference);
+      _projectRooms.remove(previousReference);
+      _projectRooms.add(newReference);
+      notifyListeners();
+    }
+  }
+
+  void updateTestEntry(int id, {int? roomId, TestEntryData? data}) async {
+    TestEntry? previousReference = _projectTestEntries.firstWhereOrNull((entry) => entry.id == id);
+
+    if (previousReference != null) {
+      TestEntry newReference = previousReference.copyWith(
+        roomId: roomId ?? previousReference.roomId,
+        data: data ?? previousReference.data,
+        updatedAt: DateTime.now(),
+      );
+
+      await _repository.updateTestEntry(newReference);
+      _projectTestEntries.remove(previousReference);
+      _projectTestEntries.add(newReference);
+      notifyListeners();
+    }
   }
 }
