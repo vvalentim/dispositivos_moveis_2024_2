@@ -125,6 +125,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     }
 
     return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 80),
       itemCount: _controller.projects.length,
       itemBuilder: (BuildContext context, int index) {
         return _buildProjectsListTile(_controller.projects[index], index);

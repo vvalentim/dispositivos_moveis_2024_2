@@ -89,6 +89,7 @@ class _RoomsPageState extends State<RoomsPage> {
     }
 
     return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 80),
       itemCount: _controller.rooms.length,
       itemBuilder: (BuildContext context, int index) {
         return _buildRoomsListTile(_controller.rooms[index], index);
