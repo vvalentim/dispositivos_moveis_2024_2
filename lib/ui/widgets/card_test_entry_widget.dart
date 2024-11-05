@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
 import 'package:dispositivos_moveis_2024_2/models/test_entry.dart';
-import 'package:flutter/material.dart';
 
 class CardTestEntryWidget extends StatelessWidget {
   final TestEntry entry;
@@ -72,10 +72,10 @@ class CardTestEntryWidget extends StatelessWidget {
             ],
           ),
         ),
-        const Icon(
-          Icons.menu_rounded,
-          size: 32,
-        ),
+        // const Icon(
+        //   Icons.menu_open,
+        //   size: 32,
+        // ),
       ],
     );
   }

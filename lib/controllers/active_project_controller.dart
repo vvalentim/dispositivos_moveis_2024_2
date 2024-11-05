@@ -191,4 +191,8 @@ class ActiveProjectController extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  String? getRoomName(int roomId) {
+    return _projectRooms.firstWhereOrNull((room) => room.id == roomId)?.name;
+  }
 }

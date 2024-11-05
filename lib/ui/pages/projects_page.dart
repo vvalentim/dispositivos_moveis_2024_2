@@ -7,6 +7,7 @@ import 'package:dispositivos_moveis_2024_2/models/project.dart';
 import 'package:dispositivos_moveis_2024_2/ui/pages/active_project_page.dart';
 import 'package:dispositivos_moveis_2024_2/ui/widgets/bottom_sheet_widget.dart';
 import 'package:dispositivos_moveis_2024_2/ui/widgets/confirm_dialog_widget.dart';
+import 'package:dispositivos_moveis_2024_2/ui/widgets/empty_list_message_widget.dart';
 
 class ProjectsPage extends StatefulWidget {
   const ProjectsPage({super.key});
@@ -114,6 +115,13 @@ class _ProjectsPageState extends State<ProjectsPage> {
   Widget _buildProjectsList() {
     if (_controller.loading) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_controller.projects.isEmpty) {
+      return const EmptyListMessageWidget(
+        title: "Looks like you didn't add any rooms yet.",
+        subtitle: 'Add a new room to be able to upload test data.',
+      );
     }
 
     return ListView.builder(

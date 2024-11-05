@@ -5,6 +5,7 @@ import 'package:dispositivos_moveis_2024_2/models/room.dart';
 import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
 import 'package:dispositivos_moveis_2024_2/ui/widgets/bottom_sheet_widget.dart';
 import 'package:dispositivos_moveis_2024_2/ui/widgets/confirm_dialog_widget.dart';
+import 'package:dispositivos_moveis_2024_2/ui/widgets/empty_list_message_widget.dart';
 
 class RoomsPage extends StatefulWidget {
   const RoomsPage({super.key});
@@ -80,8 +81,11 @@ class _RoomsPageState extends State<RoomsPage> {
   }
 
   Widget _buildRoomsList() {
-    if (_controller.loading) {
-      return const Center(child: CircularProgressIndicator());
+    if (_controller.rooms.isEmpty) {
+      return const EmptyListMessageWidget(
+        title: "Looks like you didn't add any rooms yet.",
+        subtitle: 'Add a new room to be able to upload test data.',
+      );
     }
 
     return ListView.builder(

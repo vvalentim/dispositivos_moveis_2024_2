@@ -20,6 +20,9 @@ class _ReportsPageState extends State<ReportsPage> {
       appBar: AppBar(
         title: Text(_controller.project.name),
       ),
+      body: const Center(
+        child: Text('WIP'),
+      ),
     );
   }
 }
