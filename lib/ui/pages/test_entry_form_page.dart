@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dispositivos_moveis_2024_2/models/room.dart';
 import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
-import 'package:dispositivos_moveis_2024_2/models/test_entry.dart';
 
 class TestEntryFormPage extends StatefulWidget {
   final List<Room> rooms;

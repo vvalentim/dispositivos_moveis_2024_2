@@ -75,10 +75,15 @@ class CardTestEntryWidget extends StatelessWidget {
               ],
             ),
           ),
-          // const Icon(
-          //   Icons.menu_open,
-          //   size: 32,
-          // ),
+          IconButton(
+            icon: const Icon(
+              Icons.clear_rounded,
+              size: 28,
+            ),
+            onPressed: () {
+              controller.removeTestEntry(entry);
+            },
+          ),
         ],
       ),
     );
