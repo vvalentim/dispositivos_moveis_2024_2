@@ -55,6 +55,7 @@ class MemoryActiveProjectRepository implements ActiveProjectRepository {
   Future<void> deleteRoom(Room room) {
     _db.testEntries.removeWhere((_, entry) => entry.roomId == room.id);
     _db.rooms.remove(room.id);
+    _updateProject(room.projectId);
 
     return Future.value(null);
   }
@@ -62,6 +63,7 @@ class MemoryActiveProjectRepository implements ActiveProjectRepository {
   @override
   Future<void> deleteTestEntry(TestEntry entry) {
     _db.testEntries.remove(entry.id);
+    _updateProject(entry.projectId);
 
     return Future.value(null);
   }
@@ -83,6 +85,7 @@ class MemoryActiveProjectRepository implements ActiveProjectRepository {
   @override
   Future<Room> updateRoom(Room room) {
     _db.rooms[room.id] = room;
+    _updateProject(room.projectId);
 
     return Future.value(room);
   }
@@ -90,6 +93,7 @@ class MemoryActiveProjectRepository implements ActiveProjectRepository {
   @override
   Future<TestEntry> updateTestEntry(TestEntry entry) {
     _db.testEntries[entry.id];
+    _updateProject(entry.projectId);
 
     return Future.value(entry);
   }

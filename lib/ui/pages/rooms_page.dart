@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:dispositivos_moveis_2024_2/models/room.dart';
-import 'package:dispositivos_moveis_2024_2/ui/widgets/bottom_sheet_widget.dart';
 import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
+import 'package:dispositivos_moveis_2024_2/ui/widgets/bottom_sheet_widget.dart';
+import 'package:dispositivos_moveis_2024_2/ui/widgets/confirm_dialog_widget.dart';
 
 class RoomsPage extends StatefulWidget {
   const RoomsPage({super.key});
@@ -19,13 +20,29 @@ class _RoomsPageState extends State<RoomsPage> {
 
   final _nameInputController = TextEditingController();
 
+  void _onTileTap(Room room) {
+    if (_controller.roomSelectionMode) {
+      _controller.toggleRoomSelection(room);
+    }
+  }
+
+  void _onTileLongPress(Room room) {
+    if (_controller.roomSelectionMode) {
+      return _controller.clearRoomSelection();
+    }
+
+    _controller.toggleRoomSelection(room);
+  }
+
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<ActiveProjectController>(context);
 
     return Scaffold(
       appBar: AppBar(
+        leading: _buildAppBarLeading(),
         title: Text(_controller.project.name),
+        actions: _buildAppBarActions(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateOrRenameRoom(),
@@ -36,6 +53,30 @@ class _RoomsPageState extends State<RoomsPage> {
       ),
       body: _buildRoomsList(),
     );
+  }
+
+  Widget? _buildAppBarLeading() {
+    return _controller.roomSelectionMode
+        ? IconButton(
+            onPressed: () => _controller.clearRoomSelection(),
+            icon: const Icon(Icons.undo),
+          )
+        : null;
+  }
+
+  List<Widget> _buildAppBarActions() {
+    final List<Widget> actions = [];
+
+    if (_controller.roomSelectionMode) {
+      actions.add(
+        IconButton(
+          onPressed: () => _showDeleteSelectedRooms(),
+          icon: const Icon(Icons.delete),
+        ),
+      );
+    }
+
+    return actions;
   }
 
   Widget _buildRoomsList() {
@@ -55,8 +96,8 @@ class _RoomsPageState extends State<RoomsPage> {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return InkWell(
-      onLongPress: () => {},
-      onTap: () => {},
+      onLongPress: () => _onTileLongPress(room),
+      onTap: () => _onTileTap(room),
       child: Ink(
         color: index % 2 != 0 ? primaryColor.withOpacity(0.2) : primaryColor.withOpacity(0.1),
         child: ListTile(
@@ -66,16 +107,15 @@ class _RoomsPageState extends State<RoomsPage> {
           ),
           minLeadingWidth: 0,
           horizontalTitleGap: 10,
-          leading: null,
+          leading: _buildListTileLeadingSelection(room),
           title: Text(room.name),
-          // subtitle: Text("Modified ${room.updatedAtTimeAgo}"),
           trailing: Wrap(
             crossAxisAlignment: WrapCrossAlignment.center,
             children: <Widget>[
               Wrap(
                 children: <Widget>[
                   IconButton(
-                    onPressed: () => {},
+                    onPressed: () => _showCreateOrRenameRoom(room),
                     padding: const EdgeInsets.all(16),
                     icon: const Icon(Icons.mode_edit),
                   ),
@@ -85,6 +125,21 @@ class _RoomsPageState extends State<RoomsPage> {
           ),
         ),
       ),
+    );
+  }
+
+  // Show or hide checkbox depending on "selectionMode"
+  AnimatedContainer _buildListTileLeadingSelection(Room room) {
+    return AnimatedContainer(
+      margin: const EdgeInsets.all(0),
+      height: double.infinity,
+      width: _controller.roomSelectionMode ? 30 : 0,
+      duration: Durations.short4,
+      child: _controller.roomSelectionMode
+          ? _controller.selectedRooms.contains(room)
+              ? const Icon(Icons.check_box)
+              : const Icon(Icons.check_box_outline_blank)
+          : null,
     );
   }
 
@@ -129,7 +184,7 @@ class _RoomsPageState extends State<RoomsPage> {
           submitCallback: () {
             if (_form.currentState!.validate()) {
               if (room != null) {
-                // _controller.renameRoom(room.id, _nameInputController.text);
+                _controller.renameRoom(room.id, _nameInputController.text);
               } else {
                 _controller.createRoom(_nameInputController.text);
               }
@@ -142,5 +197,40 @@ class _RoomsPageState extends State<RoomsPage> {
     ).whenComplete(() {
       _nameInputController.clear();
     });
+  }
+
+  Future<void> _showDeleteSelectedRooms() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return ConfirmDialogWidget(
+          title: 'Delete Rooms',
+          contents: const [
+            Icon(
+              Icons.warning_rounded,
+              size: 48,
+            ),
+            Text(
+              "Are you sure you want to delete all selected rooms?",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              overflow: TextOverflow.fade,
+            ),
+            SizedBox(height: 15),
+            Text(
+              "All data associated with it will also be deleted.",
+              textAlign: TextAlign.center,
+            ),
+          ],
+          submitCallback: () {
+            _controller.removeAllSelectedRooms();
+            Navigator.of(context).pop();
+          },
+        );
+      },
+    );
   }
 }

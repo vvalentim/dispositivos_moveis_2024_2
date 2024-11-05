@@ -244,7 +244,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
               size: 48,
             ),
             Text(
-              "Are you sure you want to delete all projects?",
+              "Are you sure you want to delete all selected projects?",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
