@@ -19,21 +19,25 @@ class EmptyListMessageWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.info,
-              size: 56,
-            ),
-            const SizedBox(height: 25),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+            const Padding(
+              padding: EdgeInsets.only(bottom: 25.0),
+              child: Icon(
+                Icons.info,
+                size: 56,
               ),
-              overflow: TextOverflow.fade,
             ),
-            const SizedBox(height: 25),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 25.0),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.fade,
+              ),
+            ),
             Text(
               subtitle,
               textAlign: TextAlign.center,

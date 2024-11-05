@@ -30,7 +30,6 @@ class CardTestEntryWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const SizedBox(height: 10),
             _buildDataRow(),
           ],
         ),
@@ -38,45 +37,50 @@ class CardTestEntryWidget extends StatelessWidget {
     );
   }
 
-  Row _buildHeader() {
+  Widget _buildHeader() {
     final roomName = controller.getRoomName(entry.roomId) ?? 'Room name';
     final isoEntryDate = 'Entry date';
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Icon(
-          Icons.meeting_room,
-          size: 36,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                roomName,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16,
-                ),
-              ),
-              Text(
-                isoEntryDate,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14,
-                  color: Colors.black45,
-                ),
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(right: 10.0),
+            child: Icon(
+              Icons.meeting_room,
+              size: 36,
+            ),
           ),
-        ),
-        // const Icon(
-        //   Icons.menu_open,
-        //   size: 32,
-        // ),
-      ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  roomName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  isoEntryDate,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    color: Colors.black45,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // const Icon(
+          //   Icons.menu_open,
+          //   size: 32,
+          // ),
+        ],
+      ),
     );
   }
 
@@ -120,15 +124,15 @@ class CardTestEntryWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 5,
               ),
               Text(
                 firstLabel,

@@ -1,3 +1,4 @@
+import 'package:dispositivos_moveis_2024_2/ui/pages/test_entry_form_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
@@ -14,17 +15,29 @@ class TestEntriesPage extends StatefulWidget {
 class _TestEntriesPageState extends State<TestEntriesPage> {
   late ActiveProjectController _controller;
 
+  void _openFormPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => TestEntryFormPage(
+          rooms: _controller.rooms,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _controller = Provider.of<ActiveProjectController>(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text(_controller.project.name),
       ),
       body: _buildTestEntriesList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
+        onPressed: () => _openFormPage(),
         child: const Icon(
           Icons.add,
           color: Colors.white,

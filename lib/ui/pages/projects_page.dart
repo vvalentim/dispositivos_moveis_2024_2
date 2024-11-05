@@ -251,16 +251,18 @@ class _ProjectsPageState extends State<ProjectsPage> {
               Icons.warning_rounded,
               size: 48,
             ),
-            Text(
-              "Are you sure you want to delete all selected projects?",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: Text(
+                "Are you sure you want to delete all selected projects?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.fade,
               ),
-              overflow: TextOverflow.fade,
             ),
-            SizedBox(height: 15),
             Text(
               "All data associated with it will also be deleted.",
               textAlign: TextAlign.center,

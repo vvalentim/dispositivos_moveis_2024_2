@@ -214,16 +214,18 @@ class _RoomsPageState extends State<RoomsPage> {
               Icons.warning_rounded,
               size: 48,
             ),
-            Text(
-              "Are you sure you want to delete all selected rooms?",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: EdgeInsets.only(bottom: 16.0),
+              child: Text(
+                "Are you sure you want to delete all selected rooms?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.fade,
               ),
-              overflow: TextOverflow.fade,
             ),
-            SizedBox(height: 15),
             Text(
               "All data associated with it will also be deleted.",
               textAlign: TextAlign.center,
