@@ -96,14 +96,14 @@ class CardTestEntryWidget extends StatelessWidget {
         _buildDataColumn(
           title: '2,4 GHz',
           firstLabel: 'Signal strength',
-          firstDataValue: '${entry.data.signalStrength_2g.toString()} dBm',
+          firstDataValue: '-${entry.data.signalStrength_2g.toString()} dBm',
           secondLabel: 'Speed',
           secondDataValue: '${entry.data.speed_2g.toString()} Mbps',
         ),
         _buildDataColumn(
           title: '5 GHz',
           firstLabel: 'Signal strength',
-          firstDataValue: '${entry.data.signalStrength_5g.toString()} dBm',
+          firstDataValue: '-${entry.data.signalStrength_5g.toString()} dBm',
           secondLabel: 'Speed',
           secondDataValue: '${entry.data.speed_5g.toString()} Mbps',
         ),

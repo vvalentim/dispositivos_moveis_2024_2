@@ -1,3 +1,4 @@
+import 'package:dispositivos_moveis_2024_2/validators/validator_test_entry_data_mixin.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dispositivos_moveis_2024_2/models/room.dart';
@@ -12,7 +13,7 @@ class TestEntryFormPage extends StatefulWidget {
   State<TestEntryFormPage> createState() => _TestEntryFormPageState();
 }
 
-class _TestEntryFormPageState extends State<TestEntryFormPage> {
+class _TestEntryFormPageState extends State<TestEntryFormPage> with ValidatorTestEntryDataMixin {
   final _form = GlobalKey<FormState>();
   final _room = TextEditingController();
   final _signalStrength2g = TextEditingController();
@@ -34,7 +35,7 @@ class _TestEntryFormPageState extends State<TestEntryFormPage> {
     // TODO: validate fields
     final controller = context.read<ActiveProjectController>();
 
-    if (selectedRoom != null) {
+    if (_form.currentState!.validate()) {
       // TODO: refactor to be able to handle async submit
 
       controller.createTestEntry(
@@ -64,6 +65,7 @@ class _TestEntryFormPageState extends State<TestEntryFormPage> {
     );
   }
 
+  // TODO: add validators mixins
   Form _buildForm() {
     return Form(
       key: _form,
@@ -90,16 +92,18 @@ class _TestEntryFormPageState extends State<TestEntryFormPage> {
             _buildFormInput(
               label: 'Signal strength (dBm)',
               controller: _signalStrength2g,
-              validator: (value) {
-                return null;
-              },
+              validator: (value) => combine([
+                () => isNotEmpty(value),
+                () => isValidDbmValue(value),
+              ]),
             ),
             _buildFormInput(
               label: 'Speed (Mbps)',
               controller: _speed2g,
-              validator: (value) {
-                return null;
-              },
+              validator: (value) => combine([
+                () => isNotEmpty(value),
+                () => isValidMbpsValue(value),
+              ]),
             ),
             const Padding(
               padding: EdgeInsets.only(top: 24.0, bottom: 12.0),
@@ -111,16 +115,18 @@ class _TestEntryFormPageState extends State<TestEntryFormPage> {
             _buildFormInput(
               label: 'Signal strength (dBm)',
               controller: _signalStrength5g,
-              validator: (value) {
-                return null;
-              },
+              validator: (value) => combine([
+                () => isNotEmpty(value),
+                () => isValidDbmValue(value),
+              ]),
             ),
             _buildFormInput(
               label: 'Speed (Mbps)',
               controller: _speed5g,
-              validator: (value) {
-                return null;
-              },
+              validator: (value) => combine([
+                () => isNotEmpty(value),
+                () => isValidMbpsValue(value),
+              ]),
             ),
             _buildFormButtons(),
           ],
