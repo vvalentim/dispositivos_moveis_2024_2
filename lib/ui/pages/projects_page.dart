@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:dispositivos_moveis_2024_2/controllers/projects_list_controller.dart';
+import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
 import 'package:dispositivos_moveis_2024_2/models/project.dart';
 import 'package:dispositivos_moveis_2024_2/ui/pages/active_project_page.dart';
-import 'package:dispositivos_moveis_2024_2/controllers/projects_list_controller.dart';
 import 'package:dispositivos_moveis_2024_2/ui/widgets/bottom_sheet_widget.dart';
 import 'package:dispositivos_moveis_2024_2/ui/widgets/confirm_dialog_widget.dart';
 
@@ -37,12 +38,21 @@ class _ProjectsPageState extends State<ProjectsPage> {
       return _controller.toggleItemSelection(project);
     }
 
+    _controller.toggleActiveProject();
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => ActiveProjectPage(projectId: project.id),
+        builder: (_) {
+          return ChangeNotifierProvider<ActiveProjectController>.value(
+            value: ActiveProjectController(project),
+            child: const ActiveProjectPage(),
+          );
+        },
       ),
-    );
+    ).then((_) {
+      _controller.toggleActiveProject();
+    });
   }
 
   void _onTileLongPress(Project project) {

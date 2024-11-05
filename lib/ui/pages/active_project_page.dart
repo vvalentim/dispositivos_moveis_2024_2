@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
 import 'package:dispositivos_moveis_2024_2/ui/pages/reports_page.dart';
 import 'package:dispositivos_moveis_2024_2/ui/pages/rooms_page.dart';
 import 'package:dispositivos_moveis_2024_2/ui/pages/test_entries_page.dart';
+import 'package:dispositivos_moveis_2024_2/controllers/active_project_controller.dart';
 
 class ActiveProjectPage extends StatefulWidget {
-  final int projectId;
-
-  const ActiveProjectPage({super.key, required this.projectId});
+  const ActiveProjectPage({super.key});
 
   @override
   State<ActiveProjectPage> createState() => _ActiveProjectPageState();
@@ -17,42 +15,53 @@ class ActiveProjectPage extends StatefulWidget {
 class _ActiveProjectPageState extends State<ActiveProjectPage> {
   int _currentPage = 0;
 
-  late PageController _pageController;
+  late ActiveProjectController _controller;
+
+  late PageController _pageViewController;
 
   @override
   void initState() {
     super.initState();
-
-    _pageController = PageController(initialPage: _currentPage);
+    _pageViewController = PageController(initialPage: _currentPage);
   }
 
-  void setCurrentPage(int page) {
-    setState(() {
-      _currentPage = page;
-    });
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ChangeNotifierProvider(
-        create: (context) => ActiveProjectController(),
-        child: PageView(
-          controller: _pageController,
-          onPageChanged: (page) {
-            setCurrentPage(page);
-          },
-          children: const [
-            RoomsPage(),
-            TestEntriesPage(),
-            ReportsPage(),
-          ],
+    _controller = Provider.of<ActiveProjectController>(context);
+
+    if (_controller.loading) {
+      return Container(
+        color: Colors.white,
+        child: const Center(
+          child: CircularProgressIndicator(),
         ),
+      );
+    }
+
+    return Scaffold(
+      body: PageView(
+        controller: _pageViewController,
+        onPageChanged: (page) {
+          setState(() {
+            _currentPage = page;
+          });
+        },
+        children: const [
+          RoomsPage(),
+          TestEntriesPage(),
+          ReportsPage(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentPage,
         onTap: (page) {
-          _pageController.animateToPage(
+          _pageViewController.animateToPage(
             page,
             duration: Durations.medium1,
             curve: Curves.ease,

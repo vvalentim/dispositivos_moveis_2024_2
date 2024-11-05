@@ -21,8 +21,8 @@ class MemoryProjectsListRepository implements ProjectsListRepository {
 
   @override
   Future<void> delete(int projectId) {
-    _db.testEntries.removeWhere((id, entry) => entry.projectId == projectId);
-    _db.rooms.removeWhere((id, room) => room.projectId == projectId);
+    _db.testEntries.removeWhere((_, entry) => entry.projectId == projectId);
+    _db.rooms.removeWhere((_, room) => room.projectId == projectId);
     _db.projects.remove(projectId);
 
     return Future.value(null);
@@ -30,9 +30,6 @@ class MemoryProjectsListRepository implements ProjectsListRepository {
 
   @override
   Future<List<Project>> fetchAll() async {
-    // Fake delay
-    await Future.delayed(const Duration(seconds: 1));
-
     return Future.value(_db.projects.values.toList());
   }
 

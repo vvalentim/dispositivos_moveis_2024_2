@@ -5,7 +5,7 @@ import 'package:dispositivos_moveis_2024_2/repositories/projects_list/projects_l
 import 'package:dispositivos_moveis_2024_2/repositories/active_project/active_project_repository.dart';
 
 // Implementation
-import 'package:dispositivos_moveis_2024_2/repositories/active_project/memory_project_repository.dart';
+import 'package:dispositivos_moveis_2024_2/repositories/active_project/memory_active_project_repository.dart';
 import 'package:dispositivos_moveis_2024_2/repositories/projects_list/memory_projects_list_repository.dart';
 
 GetIt locator = GetIt.instance;

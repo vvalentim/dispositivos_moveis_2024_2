@@ -4,6 +4,7 @@ import 'package:dispositivos_moveis_2024_2/locator.dart';
 import 'package:dispositivos_moveis_2024_2/models/project.dart';
 import 'package:dispositivos_moveis_2024_2/repositories/projects_list/projects_list_repository.dart';
 
+// TODO: handle repository exceptions
 class ProjectsListController extends ChangeNotifier {
   final ProjectsListRepository _repository = locator<ProjectsListRepository>();
 
@@ -14,6 +15,8 @@ class ProjectsListController extends ChangeNotifier {
   bool _loading = false;
 
   bool _selectionMode = false;
+
+  bool _hasActiveProject = false;
 
   ProjectsListController() {
     _load();
@@ -27,27 +30,37 @@ class ProjectsListController extends ChangeNotifier {
 
   bool get selectionMode => _selectionMode;
 
+  void _sortProjectsByTimestamp() {
+    _projects.sort(
+      (a, b) => b.updatedAt.compareTo(a.updatedAt),
+    );
+  }
+
   void _load() async {
     _loading = true;
     notifyListeners();
 
-    // TODO: handle fetchAll exceptions
+    // Fake delay
+    await Future.delayed(const Duration(seconds: 1));
+
     _projects = await _repository.fetchAll();
+    _sortProjectsByTimestamp();
 
     _loading = false;
     notifyListeners();
   }
 
   void createProject(String name) async {
-    // TODO: handle create exceptions
     Project project = await _repository.create(name);
     _projects.add(project);
+    _sortProjectsByTimestamp();
     notifyListeners();
   }
 
   void removeProject(int id) async {
     await _repository.delete(id);
     _projects.removeWhere((project) => project.id == id);
+    _sortProjectsByTimestamp();
     notifyListeners();
   }
 
@@ -60,6 +73,7 @@ class ProjectsListController extends ChangeNotifier {
       await _repository.update(newReference);
       _projects.remove(previousReference);
       _projects.add(newReference);
+      _sortProjectsByTimestamp();
       notifyListeners();
     }
   }
@@ -94,8 +108,20 @@ class ProjectsListController extends ChangeNotifier {
       _projects.remove(project);
     }
 
+    _sortProjectsByTimestamp();
     _loading = false;
     clearSelection();
+    notifyListeners();
+  }
+
+  void toggleActiveProject() {
+    // When returning from ActiveProjectPage, refresh the list of projects to detect project updates
+    // Just a little detail to refresh the 'updatedAt' timestamp
+    if (_hasActiveProject) {
+      _load();
+    }
+
+    _hasActiveProject = !_hasActiveProject;
     notifyListeners();
   }
 }
